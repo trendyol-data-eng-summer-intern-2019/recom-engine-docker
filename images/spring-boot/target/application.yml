@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  data:
+    mongodb:
+      host: mongo1
+      port: 27017
+      database: recom-engine
+  kafka:
+    consumer:
+      bootstrap-servers: kafka1:19092
+      group-id: reviewConsumer
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: kafka1:19092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
