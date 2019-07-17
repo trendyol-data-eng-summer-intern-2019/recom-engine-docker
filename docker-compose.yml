@@ -1,0 +1,130 @@
+version: '3.7'
+services:
+  zoo1:
+    image: zookeeper:3.4.9
+    hostname: zoo1
+    ports:
+      - "2181:2181"
+    networks:
+      - project
+    environment:
+        ZOO_MY_ID: 1
+        ZOO_PORT: 2181
+        ZOO_SERVERS: server.1=zoo1:2888:3888
+    volumes:
+      - ./volumes/zk-single-kafka-single/zoo1/data:/data
+      - ./volumes/zk-single-kafka-single/zoo1/datalog:/datalog
+
+  kafka1:
+    image: confluentinc/cp-kafka:5.2.2
+    hostname: kafka1
+    ports:
+      - "9092:9092"
+      - "19092:19092"
+    networks:
+      - project
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_DOCKER_INTERNAL://kafka1:19092,LISTENER_DOCKER_EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_DOCKER_INTERNAL:PLAINTEXT,LISTENER_DOCKER_EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_DOCKER_INTERNAL
+      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
+      KAFKA_BROKER_ID: 1
+      KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    volumes:
+      - ./volumes/zk-single-kafka-single/kafka1/data:/var/lib/kafka/data
+    depends_on:
+      - zoo1
+
+  flume1:
+    image: trendyol-data-eng-intern-2019/flume
+    hostname: flume1
+    ports:
+      - "41414:41414"
+      - "1234:1234"
+    networks:
+      - project
+    volumes:
+      - ./images/flume/flume.conf:/opt/flume/conf/flume.conf
+      - ./volumes/flume-output:/logs
+
+  spark-master:
+    image: trendyol-data-eng-intern-2019/spark-master
+    command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
+    hostname: spark-master
+    environment:
+      MASTER: spark://spark-master:7077
+      SPARK_CONF_DIR: /conf
+      SPARK_PUBLIC_DNS: localhost
+    expose:
+      - 7001
+      - 7002
+      - 7003
+      - 7004
+      - 7005
+      - 7077
+      - 6066
+      - 8080
+    ports:
+      - 4040:4040
+      - 6066:6066
+      - 7077:7077
+      - 8383:8080
+    networks:
+      - project
+    volumes:
+      - ./images/spark/master/target/:/app/
+      - ./images/spark/master/cronjobs:/cronjobs
+      - ./volumes/spark/conf/master:/conf
+      - ./volumes/spark/data:/tmp/data
+      - ./volumes/spark/models/:/models
+      - ./volumes/flume-output:/logs/flume
+
+  spark-worker:
+    image: trendyol-data-eng-intern-2019/spark-worker
+    command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
+    hostname: spark-worker
+    environment:
+      SPARK_CONF_DIR: /conf
+      SPARK_WORKER_CORES: 4
+      SPARK_WORKER_MEMORY: 4g
+      SPARK_WORKER_PORT: 8881
+      SPARK_WORKER_WEBUI_PORT: 8082
+      SPARK_PUBLIC_DNS: localhost
+    links:
+      - spark-master
+    expose:
+      - 7012
+      - 7013
+      - 7014
+      - 7015
+      - 8881
+    ports:
+      - 8082:8082
+    networks:
+      - project
+    volumes:
+      - ./images/spark/master/target/:/app/
+      - ./volumes/spark/conf/worker:/conf
+      - ./volumes/spark/data:/tmp/data
+      - ./volumes/spark/models/:/models
+      - ./volumes/flume-output:/logs/flume
+
+  mongo1:
+    image: mongo:latest
+    hostname: mongo1
+    ports:
+      - "27017:27017"
+    networks:
+      - project
+
+  spring-boot1:
+    image: trendyol-data-eng-intern-2019/spring-boot
+    hostname: spring-boot1
+    ports:
+      - "8080:8080"
+    networks:
+      - project
+
+networks:
+  project:
