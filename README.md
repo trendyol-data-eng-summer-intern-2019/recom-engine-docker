@@ -1,4 +1,4 @@
-# Recommender Engine - Docker Files
+# Recommendation Engine - Docker Files
 
 ## Description
 This repository contains the docker-compose file for the tools used in our recommender engine. The docker-compose file includes Kafka, Flume, Zookeeper, Spring Boot, MongoDB and Spark.
