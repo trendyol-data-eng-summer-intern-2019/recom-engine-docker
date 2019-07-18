@@ -62,11 +62,19 @@ RUN curl -sL --retry 3 \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
 
-# kafka-clients dependency
-RUN curl \
-   "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.3.0/kafka-clients-2.3.0.jar" \
-   --output kafka-clients-2.3.0.jar \
-  && mv kafka-clients-2.3.0.jar $SPARK_HOME/jars/
+ # spark-streaming assembly jar
+ RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-streaming/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
+  && curl -Lo /app/recom-engine-streaming-assembly-0.1.jar $latest_jar_link
+
+ # spark-ml jar
+ RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-ml/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
+  && curl -Lo /app/recom-engine-ml-1.0-SNAPSHOT.jar $latest_jar_link
+
+ # kafka-clients dependency
+ RUN curl \
+ "https://repo1.maven.org/maven2/org/apache/kafka/kafka-clients/2.3.0/kafka-clients-2.3.0.jar" \
+    --output $SPARK_HOME/jars/kafka-clients-2.3.0.jar \
+   && echo "*/5 * * * * root /bin/bash /cronjobs/ml-submitter.sh" >> /etc/crontab
 
 WORKDIR $SPARK_HOME
 CMD ["bin/spark-class", "org.apache.spark.deploy.master.Master"]
