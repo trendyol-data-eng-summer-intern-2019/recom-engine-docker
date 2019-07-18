@@ -3,7 +3,7 @@
 ## Description
 This repository contains the docker-compose file for the tools used in our recommender engine. The docker-compose file includes Kafka, Flume, Zookeeper, Spring Boot, MongoDB and Spark.
 
-![System Overview](./media/recommendation-engine.png)
+![System Overview](./figures/architecture.png)
 
 ## Usage
 When you run `docker-compose up` command in root directory of this repository, all services of the system run with their own docker images. These images placed in this GitHub repository.
