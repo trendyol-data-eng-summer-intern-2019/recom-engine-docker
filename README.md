@@ -11,7 +11,7 @@ This repository contains the docker-compose file for the tools used in our recom
 ## Usage
 There are 2 YAML files which can be used to up the system. One can be used to up the system with currently built images, the other one can be used to up the system by building the images from scratch.
 
-If you run `docker-compose up` command in the root directory of this repository, all services of the system run with their own docker images. These images will be placed in this GitHub repository, i.e. currently this scenario is not available.
+If you run `docker-compose up` command in the root directory of this repository, all services of the system run with their own docker images. These images will be placed in this GitHub repository, i.e. currently this scenario is not available since we are in the waitlist for the GitHub Package Registry, you should run the project with the other YAML file.
 
 Dockerfiles (Flume, Spark Master, Spark Worker and Spring Boot) of the services are also provided under images directory in this repository. If you change the Dockerfiles, run the command `docker-compose -f docker-compose-with-build.yml up` to up the whole system.
 
