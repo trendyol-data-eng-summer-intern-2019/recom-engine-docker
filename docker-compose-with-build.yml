@@ -75,8 +75,6 @@ services:
     volumes:
       - ./images/spark/master/target/:/app/
       - ./images/spark/master/cronjobs:/cronjobs
-      - ./volumes/spark/conf/master:/conf
-      - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
 
@@ -105,8 +103,6 @@ services:
       - project
     volumes:
       - ./images/spark/master/target/:/app/
-      - ./volumes/spark/conf/worker:/conf
-      - ./volumes/spark/data:/tmp/data
       - ./volumes/spark/models/:/models
       - ./volumes/flume-output:/logs/flume
 

@@ -1,5 +1,5 @@
 FROM debian:stretch
-MAINTAINER Getty Images "https://github.com/gettyimages"
+LABEL maintainer="https://github.com/gettyimages"
 
 RUN apt-get update \
  && apt-get install -y locales \
@@ -64,14 +64,6 @@ RUN curl -sL --retry 3 \
   | tar x -C /usr/ \
  && mv /usr/$SPARK_PACKAGE $SPARK_HOME \
  && chown -R root:root $SPARK_HOME
-
-# spark-streaming assembly jar
-RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-streaming/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
- && curl -Lo /app/recom-engine-streaming.jar $latest_jar_link
-
-# spark-ml jar
-RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-ml/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
- && curl -Lo /app/recom-engine-ml.jar $latest_jar_link
 
 # kafka-clients dependency
 RUN curl \
