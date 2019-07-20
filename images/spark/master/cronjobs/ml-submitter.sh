@@ -7,4 +7,4 @@ source /export.sh
     --deploy-mode cluster \
     --total-executor-cores 1 \
     --master spark://spark-master:7077 \
-    /app/recom-engine-ml-1.0-SNAPSHOT.jar /logs/flume /models/model
+    /app/recom-engine-ml.jar /logs/flume /models/model

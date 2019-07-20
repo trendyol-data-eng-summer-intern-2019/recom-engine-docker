@@ -9,7 +9,7 @@ until curl --max-time 2 -f http://localhost:8080 && $SPARK_HOME/bin/spark-submit
         --supervise \
         --total-executor-cores 1 \
         --master spark://spark-master:7077 \
-        /app/recom-engine-streaming-assembly-0.1.jar \
+        /app/recom-engine-streaming.jar \
         mongo1:27017 recom-engine recommendations \
         kafka1:19092 reviews \
         spark-master:7077 /models/model

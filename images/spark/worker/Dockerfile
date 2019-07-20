@@ -64,11 +64,11 @@ RUN curl -sL --retry 3 \
 
  # spark-streaming assembly jar
  RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-streaming/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
-  && curl -Lo /app/recom-engine-streaming-assembly-0.1.jar $latest_jar_link
+  && curl -Lo /app/recom-engine-streaming.jar $latest_jar_link
 
  # spark-ml jar
  RUN latest_jar_link=$(curl https://api.github.com/repos/trendyol-data-eng-summer-intern-2019/recom-engine-ml/releases/latest | grep browser_download_url | cut -d '"' -f 4) \
-  && curl -Lo /app/recom-engine-ml-1.0-SNAPSHOT.jar $latest_jar_link
+  && curl -Lo /app/recom-engine-ml.jar $latest_jar_link
 
  # kafka-clients dependency
  RUN curl \
