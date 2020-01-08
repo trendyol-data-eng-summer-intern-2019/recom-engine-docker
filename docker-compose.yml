@@ -37,7 +37,7 @@ services:
       - zoo1
 
   flume1:
-    image: trendyol-data-eng-intern-2019/flume
+    image: docker.pkg.github.com/trendyol-data-eng-summer-intern-2019/recom-engine-docker/flume:0.0.1
     hostname: flume1
     ports:
       - "41414:41414"
@@ -49,7 +49,7 @@ services:
       - ./volumes/flume-output:/logs
 
   spark-master:
-    image: trendyol-data-eng-intern-2019/spark-master
+    image: docker.pkg.github.com/trendyol-data-eng-summer-intern-2019/recom-engine-docker/spark-master:0.0.1
     command: bin/spark-class org.apache.spark.deploy.master.Master -h spark-master
     hostname: spark-master
     environment:
@@ -79,7 +79,7 @@ services:
       - ./volumes/flume-output:/logs/flume
 
   spark-worker:
-    image: trendyol-data-eng-intern-2019/spark-worker
+    image: docker.pkg.github.com/trendyol-data-eng-summer-intern-2019/recom-engine-docker/spark-worker:0.0.1
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     hostname: spark-worker
     environment:
@@ -115,7 +115,7 @@ services:
       - project
 
   spring-boot1:
-    image: trendyol-data-eng-intern-2019/spring-boot
+    image: docker.pkg.github.com/trendyol-data-eng-summer-intern-2019/recom-engine-web-service/spring-boot:0.0.1
     hostname: spring-boot1
     ports:
       - "8080:8080"
